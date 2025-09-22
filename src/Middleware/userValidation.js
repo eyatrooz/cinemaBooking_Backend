@@ -54,6 +54,15 @@ export const validateUserName = (name) => {
     const errors = [];
 
     // Check 1: Type Check
+
+    if (!name) {
+        errors.push('Name field is required');
+        return {
+            isValid: false,
+            errors: errors,
+        }
+    };
+
     if (typeof (name) !== 'string') {
 
         errors.push('Name must be a string');
