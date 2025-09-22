@@ -21,7 +21,7 @@ const testConnection = async () => {
     try {
 
         const connection = await pool.getConnection();
-        console.log(`Connected to mySQL database successfully`);
+        console.log(`Connected to mySQL database successfully!!`);
 
     } catch (error) {
         console.error('Error occured while connecting to database:', error.message);
