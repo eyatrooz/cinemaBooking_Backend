@@ -41,6 +41,22 @@ export const getUserById = async (id) => {
     }
 };
 
+export const getUserByEmail = async (userEmail) => {
+    try {
+
+        // Convert to lowercase for consistent searching 
+        const normalizedEmail = userEmail.trim().toLowerCase();
+
+        const [rows] = await database.pool.query('SELECT * FROM users WHERE email = ?', [normalizedEmail]);
+        return rows[0];
+
+    } catch (error) {
+        console.error('Error occured in getUserByEmail', error.message);
+        throw error;
+    };
+};
+
+
 export const createUser = async (newUser) => {
     try {
         const { name, password, email, phone } = newUser;
@@ -88,4 +104,5 @@ export const deleteUser = async (id) => {
         throw error;
     }
 };
+
 
