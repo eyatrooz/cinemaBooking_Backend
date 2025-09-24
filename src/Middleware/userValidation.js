@@ -96,10 +96,8 @@ export const validateUserName = (name) => {
 
     // ONLY AFTER ALL CHECKS: Return all found errors
     return {
-
         isValid: errors.length === 0,
         errors: errors,
-
     }
 };
 

@@ -184,7 +184,7 @@ export const deleteUserController = async (req, res) => {
         return res.status(200).json(
             {
                 success: true,
-                message: ' User deleted successfully',
+                message: ` User ${existingUser.name} deleted successfully`,
             }
         );
 

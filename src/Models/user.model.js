@@ -1,5 +1,22 @@
 import database from "../Config/database.js";
+import bcrypt from 'bcrypt';
 
+
+
+
+export const hashPassword = async (password) => {
+    try {
+
+        const saltRound = parseInt(process.env.SALTROUND) || 10;
+        const hashedPassword = await bcrypt.hash(password, saltRound);
+
+        return hashedPassword;
+
+    } catch (error) {
+        console.error('Error hashing password:', error.message);
+        throw new Error('Hashing password failed');
+    }
+};
 
 export const getAllUsers = async () => {
     try {
@@ -28,9 +45,11 @@ export const createUser = async (newUser) => {
     try {
         const { name, password, email, phone } = newUser;
 
+        const hashedPassword = await hashPassword(password);
+
         const [result] = await database.pool.query(
 
-            'INSERT INTO users (name, password, email, phone) VALUES (?, ? ,? , ?)', [name, password, email, phone]
+            'INSERT INTO users (name, password, email, phone) VALUES (?, ? ,? , ?)', [name, hashedPassword, email, phone]
         );
 
         return result.insertId;    // insertId gives us the auto-generated ID of the newly created user
@@ -45,8 +64,10 @@ export const updateUser = async (id, updatedUser) => {
     try {
         const { name, password, email, phone, } = updatedUser;
 
+        const hashedPassword = await hashPassword(password);
+
         const [result] = await database.pool.query(
-            ' UPDATE users SET name = ?, password = ?, email = ?, phone = ? WHERE id = ?', [name, password, email, phone, id]
+            ' UPDATE users SET name = ?, password = ?, email = ?, phone = ? WHERE id = ?', [name, hashedPassword, email, phone, id]
         );
         return result.affectedRows;  // Returns number of rows updated (typically 1 if successfull)
 
