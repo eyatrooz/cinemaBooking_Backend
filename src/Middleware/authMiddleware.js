@@ -1,6 +1,6 @@
 import JWT from 'jsonwebtoken';
 
-
+// function to check if the user logged in and has a valid token
 export const authenticateUser = (req, res, next) => {
 
     /*
