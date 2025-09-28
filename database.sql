@@ -132,7 +132,12 @@ alter table booking_seats
 add constraint fk_booking_seats_seats
 foreign key (seat_id) references seats(id)
 on delete cascade
-on update cascade
+on update cascade;
+
+ALTER TABLE users
+ADD COLUMN role ENUM('user', 'admin') DEFAULT 'user'; 
+
+describe users;
 
 
 

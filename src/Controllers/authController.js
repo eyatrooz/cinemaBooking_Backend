@@ -17,13 +17,13 @@ export const generateToken = (userID, userEmail) => {
             throw new Error('User ID and email are required for token generation');
         };
 
-        const payload = {
+        const payLoad = {
             id: userID,
-            email: userEmail
+            email: userEmail,
         };
 
         const token = JWT.sign(
-            payload,
+            payLoad,
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
         );
@@ -31,7 +31,7 @@ export const generateToken = (userID, userEmail) => {
         return token;
 
     } catch (error) {
-        console.error('Error occured while generation token');
+        console.error('Error occured while token generation.');
         throw new Error('Token generatoin failed');
     };
 };

@@ -25,8 +25,18 @@ export const getAllUsersController = async (req, res) => {
 
 export const getUserByIDController = async (req, res) => {
     try {
-        const userID = req.validatedId;
-        const user = await getUserById(userID);
+
+        const userIDFromUrl = req.validatedId;
+        const userIFromToken = req.user.id
+
+        if (userIDFromUrl !== userIFromToken) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied. You can only view your own profile.'
+            });
+        }
+
+        const user = await getUserById(userIDFromUrl);
 
         if (!user) {
             return res.status(404).json(
@@ -104,9 +114,17 @@ export const createUserController = async (req, res, next) => {
 
 export const updateUserController = async (req, res) => {
     try {
-        const userID = req.validatedId;
+        const userIdFromUrl = req.validatedId;
+        const userIdFromToken = req.user.id;
 
-        const existingUser = await getUserById(userID);
+        if (userIdFromUrl !== userIdFromToken) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied. You can only delete your own profile.'
+            });
+        }
+
+        const existingUser = await getUserById(userIdFromUrl);
         if (!existingUser) {
             return res.status(404).json(
                 {
@@ -125,14 +143,14 @@ export const updateUserController = async (req, res) => {
             phone: phone ? phone.trim() : null,
         };
 
-        const affectedRows = await updateUser(userID, update);
+        const affectedRows = await updateUser(userIdFromUrl, update);
 
         return res.status(200).json(
             {
                 success: true,
                 message: ' User updated successfully',
                 userData: {
-                    id: userID,
+                    id: userIdFromUrl,
                     email: update.email,
                     phone: update.phone
                 }
@@ -160,9 +178,17 @@ export const updateUserController = async (req, res) => {
 
 export const deleteUserController = async (req, res) => {
     try {
-        const userID = req.validatedId;
+        const userIdFromUrl = req.validatedId;
+        const userIdFromToken = req.user.id;
 
-        const existingUser = await getUserById(userID);
+        if (userIdFromUrl !== userIdFromToken) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied. You can only delete your own profile.'
+            });
+        }
+
+        const existingUser = await getUserById(userIdFromUrl);
         if (!existingUser) {
             return res.status(404).json(
                 {
@@ -172,7 +198,7 @@ export const deleteUserController = async (req, res) => {
             );
         };
 
-        const affectedRows = await deleteUser(userID);
+        const affectedRows = await deleteUser(userIdFromUrl);
 
         if (affectedRows === 0) {
             return res.status(404).json({
