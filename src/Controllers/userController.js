@@ -7,7 +7,7 @@ export const getAllUsersController = async (req, res) => {
         return res.status(200).json(
             {
                 success: true,
-                message: 'Fetching all users successfully',
+                message: 'Fetching all users successed',
                 usersData: allUsers
             }
         );
@@ -117,12 +117,15 @@ export const updateUserController = async (req, res) => {
         const userIdFromUrl = req.validatedId;
         const userIdFromToken = req.user.id;
 
-        if (userIdFromUrl !== userIdFromToken) {
+        // how can update? :
+        const currentUser = await getUserById(userIdFromToken);
+        if (currentUser.role !== "admin" && userIdFromUrl !== userIdFromToken) {
             return res.status(403).json({
                 success: false,
-                message: 'Access denied. You can only delete your own profile.'
+                message: 'Access denied. Only the admin can updates others profile or the user himself.'
             });
-        }
+        };
+
 
         const existingUser = await getUserById(userIdFromUrl);
         if (!existingUser) {
@@ -179,14 +182,6 @@ export const updateUserController = async (req, res) => {
 export const deleteUserController = async (req, res) => {
     try {
         const userIdFromUrl = req.validatedId;
-        const userIdFromToken = req.user.id;
-
-        if (userIdFromUrl !== userIdFromToken) {
-            return res.status(403).json({
-                success: false,
-                message: 'Access denied. You can only delete your own profile.'
-            });
-        }
 
         const existingUser = await getUserById(userIdFromUrl);
         if (!existingUser) {

@@ -10,7 +10,8 @@ export const authenticateUser = (req, res, next) => {
       Step 4: Verify token using JWT and your secret
       Step 5: Attach user information to request object
       Step 6: Continue to next middleware/controller
-    */
+     */
+
     try {
 
         const authHeader = req.headers.authorization;

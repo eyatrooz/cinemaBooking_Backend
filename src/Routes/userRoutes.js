@@ -13,9 +13,9 @@ import { requireAdmin } from "../Middleware/adminMiddleware.js";
 
 const router = Router();
 
-router.get('/', authenticateUser, requireAdmin, getAllUsersController);  // Keep public for now OR add authenticateUser
+router.get('/', authenticateUser, requireAdmin, getAllUsersController);
 
-router.get('/:id', authenticateUser, requireAdmin, validateId, getUserByIDController);  // Protect user profiles
+router.get('/:id', authenticateUser, validateId, getUserByIDController);
 
 router.post('/', userCreationValidation, createUserController);  // Public signup
 
