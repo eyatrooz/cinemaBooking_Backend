@@ -1,23 +1,8 @@
 import database from "../Config/database.js";
-import bcrypt from 'bcrypt';
+import { hashPassword } from "../Utils/userUtils.js";
 
 
-
-
-export const hashPassword = async (password) => {
-    try {
-
-        const saltRound = parseInt(process.env.SALTROUND) || 10;
-        const hashedPassword = await bcrypt.hash(password, saltRound);
-
-        return hashedPassword;
-
-    } catch (error) {
-        console.error('Error hashing password:', error.message);
-        throw new Error('Hashing password failed');
-    }
-};
-
+// for auth controller
 export const getAllUsers = async () => {
     try {
         const [rows] = await database.pool.query('SELECT * FROM users')
@@ -105,5 +90,35 @@ export const deleteUser = async (id) => {
     }
 };
 
+
+// Getting all users without the password
+export const getAllUsersSafe = async () => {
+    try {
+        const [rows] = await database.pool.query(
+            'SELECT id, name, email, phone, role, created_at, updated_at FROM users'
+        );
+        return rows;
+
+    } catch (error) {
+        console.error('Error occured in getAllUsersSafe.', error.message);
+        throw error;
+    };
+};
+
+
+// Getting a users without the password
+export const getUserByIdSafe = async (id) => {
+    try {
+        const row = await database.pool.query(
+            'SELECT id, name, email, phone, role, created_at, updated_at FROM users WHERE id = ?', [id]
+        );
+        return row[0];
+
+    } catch (error) {
+        console.error('Error occured in getUsersByIdSafe.', error.message);
+        throw error;
+
+    }
+};
 
 

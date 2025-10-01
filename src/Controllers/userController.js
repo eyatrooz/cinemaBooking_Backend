@@ -1,9 +1,20 @@
 
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from "../Models/user.model.js";
+import {
+    getAllUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser,
+    getAllUsersSafe,
+    getUserByIdSafe,
+
+} from "../Models/user.model.js";
+
+
 
 export const getAllUsersController = async (req, res) => {
     try {
-        const allUsers = await getAllUsers();
+        const allUsers = await getAllUsersSafe();
         return res.status(200).json(
             {
                 success: true,
@@ -27,22 +38,25 @@ export const getUserByIDController = async (req, res) => {
     try {
 
         const userIDFromUrl = req.validatedId;
-        const userIFromToken = req.user.id
+        const userIdFromToken = req.user.id;
 
-        if (userIDFromUrl !== userIFromToken) {
-            return res.status(403).json({
-                success: false,
-                message: 'Access denied. You can only view your own profile.'
-            });
+        const currentUser = await getUserById(userIdFromToken);
+
+        if (userIDFromUrl !== userIdFromToken && currentUser.role !== 'admin') {
+            return res.status(403).json(
+                {
+                    success: false,
+                    message: "You're Not Authorized"
+                }
+            )
         }
+        const user = await getUserByIdSafe(userIDFromUrl);
 
-        const user = await getUserById(userIDFromUrl);
-
-        if (!user) {
+        if (!user || (Array.isArray(user) && user.length === 0)) {
             return res.status(404).json(
                 {
                     success: false,
-                    message: 'User not found'
+                    message: 'User Not Found'
                 }
             );
         };
@@ -50,7 +64,7 @@ export const getUserByIDController = async (req, res) => {
         return res.status(200).json(
             {
                 success: true,
-                message: 'User found Successfully',
+                message: 'User Found Successfully',
                 userData: user
             }
         )
@@ -122,12 +136,12 @@ export const updateUserController = async (req, res) => {
         if (currentUser.role !== "admin" && userIdFromUrl !== userIdFromToken) {
             return res.status(403).json({
                 success: false,
-                message: 'Access denied. Only the admin can updates others profile or the user himself.'
+                message: "You're not authorized"
             });
         };
 
 
-        const existingUser = await getUserById(userIdFromUrl);
+        const existingUser = await getUserByIdSafe(userIdFromUrl);
         if (!existingUser) {
             return res.status(404).json(
                 {
@@ -154,6 +168,7 @@ export const updateUserController = async (req, res) => {
                 message: ' User updated successfully',
                 userData: {
                     id: userIdFromUrl,
+                    name: update.email,
                     email: update.email,
                     phone: update.phone
                 }

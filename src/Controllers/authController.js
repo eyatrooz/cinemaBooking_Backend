@@ -1,40 +1,11 @@
-import JWT from 'jsonwebtoken';
+
 import { createUser, getUserByEmail } from '../Models/user.model.js';
+import { generateToken } from '../Utils/userUtils.js';
 import bcrypt from 'bcrypt';
 
 
 
-export const generateToken = (userID, userEmail) => {
-    try {
 
-        /*
-           Create payload with user info
-            Generate and sign the token
-            return token
-        */
-
-        if (!userID || !userEmail) {
-            throw new Error('User ID and email are required for token generation');
-        };
-
-        const payLoad = {
-            id: userID,
-            email: userEmail,
-        };
-
-        const token = JWT.sign(
-            payLoad,
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN }
-        );
-
-        return token;
-
-    } catch (error) {
-        console.error('Error occured while token generation.');
-        throw new Error('Token generatoin failed');
-    };
-};
 
 
 export const signUpController = async (req, res) => {
