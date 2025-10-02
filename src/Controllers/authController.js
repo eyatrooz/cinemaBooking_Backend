@@ -4,10 +4,6 @@ import { generateToken } from '../Utils/userUtils.js';
 import bcrypt from 'bcrypt';
 
 
-
-
-
-
 export const signUpController = async (req, res) => {
     try {
 

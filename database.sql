@@ -75,6 +75,13 @@ CREATE TABLE payments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+create table password_reset_tokens (
+ id INT PRIMARY KEY AUTO_INCREMENT,
+ user_id INT not null,
+ token  varchar(255) unique not null,
+ created_at timestamp default current_timestamp,
+ updated_at timestamp not null
+);
 
 -- relationships:
 -- users-bookings (1-M)
@@ -134,10 +141,27 @@ foreign key (seat_id) references seats(id)
 on delete cascade
 on update cascade;
 
+-- users → password_reset_tokens (1:M)
+ALTER TABLE password_reset_tokens
+ADD CONSTRAINT fk_password_reset_tokens_users
+foreign key (user_id) references users(id)
+on delete cascade
+on update cascade;
+
 ALTER TABLE users
 ADD COLUMN role ENUM('user', 'admin') DEFAULT 'user'; 
 
-describe users;
+UPDATE users SET role = 'admin' WHERE email = 'emranatrooz03@gmail.com';
+
+SELECT id, name, email, role FROM users WHERE email = 'emranatrooz03@gmail.com';
+
+Alter table password_reset_tokens
+ADD COLUMN expires_at DATETIME NOT NULL,
+ADD COLUMN used BOOLEAN DEFAULT FALSE;
+
+describe password_reset_tokens;
+
+
 
 
 

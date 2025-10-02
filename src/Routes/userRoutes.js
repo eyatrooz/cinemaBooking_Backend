@@ -15,7 +15,7 @@ const router = Router();
 
 router.get('/', authenticateUser, requireAdmin, getAllUsersController);
 
-router.get('/:id', authenticateUser, validateId, getUserByIDController);
+router.get('/:id', authenticateUser, requireAdmin, validateId, getUserByIDController);
 
 router.post('/', userCreationValidation, createUserController);  // Public signup
 
