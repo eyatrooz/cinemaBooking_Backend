@@ -24,7 +24,7 @@ export const setTokenExpireationTime = () => {
     const expirationTime = new Date(now.getTime() + 60 * 60 * 1000);
 
     // converting expirationTime to ISO format first, then modifying it to match MySQL's DATETIME format.
-    const formatted = expirationTime.toISOString.split(0, 19).replace('T', ' ');
+    const formatted = expirationTime.toISOString().slice(0, 19).replace('T', ' ');
 
     return formatted;
 };
