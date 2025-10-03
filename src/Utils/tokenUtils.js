@@ -4,8 +4,7 @@ import crypto from 'crypto';
 
 export const generateResetToken = () => {
 
-    const token = crypto.randomBytes(32).toString('hex');  // crypto.randonmBytes(32): Generates 32 bytes of random data
-    return token;                                         // .toString('hex'): converts those 32 random bytes into a 64-character hexadecimal string
+    return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
 export const hashToken = (token) => {
@@ -27,5 +26,11 @@ export const setTokenExpireationTime = () => {
     const formatted = expirationTime.toISOString().slice(0, 19).replace('T', ' ');
 
     return formatted;
+};
+
+// Verify if token matches hashed token
+export const verifyToken = (token, hashedToken) => {
+    const tokenHash = hashToken(token);
+    return tokenHash === hashedToken;
 };
 

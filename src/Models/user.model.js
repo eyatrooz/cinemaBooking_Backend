@@ -63,10 +63,9 @@ export const createUser = async (newUser) => {
 
 export const updateUser = async (id, updatedUser) => {
     try {
+
         const { name, password, email, phone, } = updatedUser;
-
         const hashedPassword = await hashPassword(password);
-
         const [result] = await database.pool.query(
             ' UPDATE users SET name = ?, password = ?, email = ?, phone = ? WHERE id = ?', [name, hashedPassword, email, phone, id]
         );
@@ -74,6 +73,19 @@ export const updateUser = async (id, updatedUser) => {
 
     } catch (error) {
         console.error(' Database error occured in updateUser', error.message);
+        throw error;
+    }
+};
+
+export const updateUserPassword = async (userId, newPassword) => {
+    try {
+
+        const hashedPassword = await hashPassword(newPassword);
+        const [result] = await database.pool.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, userId]);
+        return result.affectedRows;
+
+    } catch (error) {
+        console.error("Error occured while updating user password.");
         throw error;
     }
 };

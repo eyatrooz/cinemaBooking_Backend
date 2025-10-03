@@ -15,7 +15,7 @@ export const validateResetToken = async (req, res, next) => {
         };
 
         // token exists in the database? :
-        const resetToken = await getResetToken(token);
+        const resetToken = await getResetToken(token);    // get all the token table in the database
         if (!resetToken) {
             return res.status(404).json(
                 {
@@ -46,7 +46,7 @@ export const validateResetToken = async (req, res, next) => {
         };
 
         // All checks passed! Attach token data to request
-        req.resetTokenValidation = resetToken;
+        req.resetToken = resetToken;    // ← ATTACHES FULL DATABASE ROW
 
         next();
 
