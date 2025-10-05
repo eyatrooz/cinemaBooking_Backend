@@ -13,7 +13,7 @@ dotenv.config();
 // connection to the server
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
+    console.log(`The server in running on http://localhost:${PORT}`);
 });
 
 // Routes:
