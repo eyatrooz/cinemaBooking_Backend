@@ -12,6 +12,7 @@ import {
 import { getUserByEmail, updateUserPassword } from "../Models/user.model.js";
 import { generateResetToken, hashToken, setTokenExpireationTime } from "../Utils/tokenUtils.js";
 import { passwordValidation } from "../Middleware/userValidation.js";
+import { sendCodeToEmail } from "../Utils/emailService.js";
 
 
 
@@ -29,20 +30,26 @@ export const requestPasswordResetController = async (req, res) => {
 
         const user = await getUserByEmail(email);
 
-        // Generate Reset token
         if (user) {
 
+            // Generate Reset token
             const token = generateResetToken();
-
-            //hash the token
             const hashedToken = hashToken(token);
-
-            // set expireation time
             const expiresAt = setTokenExpireationTime();
 
-            // store the reset token
+            // store the reset token in the database
             const storeToken = await storeResetToken(user.id, hashedToken, expiresAt);
-        }
+
+            // try to send the token (code) to the user's email but don't crash if it fails
+            try {
+
+                //send the token (code) to user's email
+                await sendCodeToEmail(user.email, token);
+
+            } catch (emailError) {
+                console.error("Failed to send the reset password code to the emai", emailError.message);
+            }
+        };
 
         return res.status(200).json({
             success: true,
@@ -89,7 +96,7 @@ export const resetPasswordController = async (req, res) => {
         const resetTokenData = req.resetToken;
 
         // Get the user associated with this token
-        // we need to know WHICH USER is resetting their password to update it!
+        // we need to know WHICH USER is resetting their password to find the token and update the password!
         const userId = resetTokenData.user_id;
 
         //update the user's password in the database
