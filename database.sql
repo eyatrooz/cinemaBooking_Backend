@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS cinema_booking;
+
 CREATE DATABASE cinema_booking;
 USE cinema_booking;
 
@@ -159,8 +159,13 @@ Alter table password_reset_tokens
 ADD COLUMN expires_at DATETIME NOT NULL,
 ADD COLUMN used BOOLEAN DEFAULT FALSE;
 
-describe password_reset_tokens;
+ALTER TABLE password_reset_tokens
+MODIFY COLUMN updated_at TIMESTAMP DEFAULT current_timestamp ON UPDATE current_timestamp;
 
+DESCRIBE password_reset_tokens;
+
+SELECT * FROM password_reset_tokens ORDER BY created_at DESC LIMIT 1;
+ 
 
 
 

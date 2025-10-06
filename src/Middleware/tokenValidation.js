@@ -1,10 +1,11 @@
 import { getResetToken } from "../Models/resetPassword.model.js";
+import { hashToken } from "../Utils/tokenUtils.js";
 
 export const validateResetToken = async (req, res, next) => {
     try {
         const { token } = req.body;
 
-        //token provided? :
+        //token provided?
         if (!token) {
             return res.status(400).json(
                 {
@@ -14,8 +15,10 @@ export const validateResetToken = async (req, res, next) => {
             );
         };
 
-        // token exists in the database? :
-        const resetToken = await getResetToken(token);    // get all the token table in the database
+        const hashedToken = hashToken(token);  // hash it becuse the database stored the hashed one not the plain!
+
+        // token exists in the database? 
+        const resetToken = await getResetToken(hashedToken);    // het the hashed token from the database
         if (!resetToken) {
             return res.status(404).json(
                 {

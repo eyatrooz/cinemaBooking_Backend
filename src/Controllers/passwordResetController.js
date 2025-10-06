@@ -35,10 +35,9 @@ export const requestPasswordResetController = async (req, res) => {
             // Generate Reset token
             const token = generateResetToken();
             const hashedToken = hashToken(token);
-            const expiresAt = setTokenExpireationTime();
 
             // store the reset token in the database
-            const storeToken = await storeResetToken(user.id, hashedToken, expiresAt);
+            const storeToken = await storeResetToken(user.id, hashedToken);
 
             // try to send the token (code) to the user's email but don't crash if it fails
             try {

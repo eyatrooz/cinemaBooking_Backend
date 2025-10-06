@@ -3,12 +3,12 @@ import database from "../Config/database.js";
 
 
 
-export const storeResetToken = async (userId, hashedToken, expiresAt) => {
+export const storeResetToken = async (userId, hashedToken) => {
     try {
 
         const [result] = await database.pool.query(
-            'INSERT INTO  password_reset_tokens (user_id, token, expires_at) VALUES(?, ?, ?)',
-            [userId, hashedToken, expiresAt]
+            'INSERT INTO  password_reset_tokens (user_id, token, expires_at) VALUES(?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))',
+            [userId, hashedToken]
         );
         return result.insertId;
 
