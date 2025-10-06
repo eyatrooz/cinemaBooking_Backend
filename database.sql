@@ -14,7 +14,7 @@ CREATE TABLE users (
 CREATE TABLE movies (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(200) NOT NULL,
-    description TEXT,
+    description TEXT,  -- this coulmn changed to main_cast
     duration INT NOT NULL,
     genre VARCHAR(100),
     rating VARCHAR(10),
@@ -148,6 +148,8 @@ foreign key (user_id) references users(id)
 on delete cascade
 on update cascade;
 
+
+-- Queries-------------------
 ALTER TABLE users
 ADD COLUMN role ENUM('user', 'admin') DEFAULT 'user'; 
 
@@ -165,8 +167,10 @@ MODIFY COLUMN updated_at TIMESTAMP DEFAULT current_timestamp ON UPDATE current_t
 DESCRIBE password_reset_tokens;
 
 SELECT * FROM password_reset_tokens ORDER BY created_at DESC LIMIT 1;
- 
 
+
+alter table movies change column description main_cast text ;
+describe movies; 
 
 
 

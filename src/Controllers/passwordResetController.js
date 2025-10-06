@@ -32,8 +32,7 @@ export const requestPasswordResetController = async (req, res) => {
 
         if (user) {
 
-            // Generate Reset token
-            const token = generateResetToken();
+            const token = generateResetToken(); // Generate Reset token
             const hashedToken = hashToken(token);
 
             // store the reset token in the database
