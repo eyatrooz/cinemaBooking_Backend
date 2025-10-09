@@ -25,7 +25,7 @@ const testConnection = async () => {
         console.log(`Connected to mySQL database successfully!!`);
 
     } catch (error) {
-        console.error('Error occured while connecting to database:', error.message);
+        console.error('Error occurred while connecting to database:', error.message);
         process.exit(1);
     }
 };

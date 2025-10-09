@@ -27,7 +27,7 @@ export const authenticateUser = (req, res, next) => {
         if (!authHeader.startsWith('Bearer ')) {
             return res.status(401).json(
                 {
-                    succes: false,
+                    success: false,
                     message: "Access denied, Invalid token format."
                 }
             );
@@ -51,7 +51,7 @@ export const authenticateUser = (req, res, next) => {
             return res.status(401).json(
                 {
                     success: false,
-                    message: "Access denaied, token has expired",
+                    message: "Access denied, token has expired",
                 }
             );
         };

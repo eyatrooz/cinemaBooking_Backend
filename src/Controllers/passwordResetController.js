@@ -10,9 +10,9 @@ import {
 } from "../Models/resetPassword.model.js";
 
 import { getUserByEmail, updateUserPassword } from "../Models/user.model.js";
-import { generateResetToken, hashToken, setTokenExpireationTime } from "../Utils/tokenUtils.js";
+import { generateResetToken, hashToken, setTokenExpirationTime } from "../Utils/tokenUtils.js";
 import { passwordValidation } from "../Middleware/userValidation.js";
-import { sendCodeToEmail } from "../Utils/emailService.js";
+import { sendResetCodeToEmail } from "../Utils/emailService.js";
 
 
 
@@ -42,10 +42,10 @@ export const requestPasswordResetController = async (req, res) => {
             try {
 
                 //send the token (code) to user's email
-                await sendCodeToEmail(user.email, token);
+                await sendResetCodeToEmail(user.email, token);
 
             } catch (emailError) {
-                console.error("Failed to send the reset password code to the emai", emailError.message);
+                console.error("Failed to send the reset password code to the email", emailError.message);
             }
         };
 
@@ -56,7 +56,7 @@ export const requestPasswordResetController = async (req, res) => {
 
 
     } catch (error) {
-        console.error("Error occured while requestPasswordResetController().", error.message);
+        console.error("Error occurred while requestPasswordResetController().", error.message);
         return res.status(500).json(
             {
                 success: false,
@@ -109,7 +109,7 @@ export const resetPasswordController = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Error occured while resetPasswordController().", error.message);
+        console.error("Error occurred while resetPasswordController().", error.message);
         return res.status(500).json(
             {
                 success: false,

@@ -17,8 +17,8 @@ export const hashToken = (token) => {
     return hashedToken;
 };
 
-//optioinal we won't use it cuz the database handel token expiration
-export const setTokenExpireationTime = () => {
+//optional we won't use it cuz the database handel token expiration
+export const setTokenExpirationTime = () => {
 
     const now = new Date();
     const expirationTime = new Date(now.getTime() + 60 * 60 * 1000);

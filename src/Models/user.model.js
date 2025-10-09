@@ -10,7 +10,7 @@ export const getAllUsers = async () => {
 
     } catch (error) {
 
-        console.error('error occured in getAllUser,', error.message);
+        console.error('error occurred in getAllUser,', error.message);
         throw error;
     }
 };
@@ -21,7 +21,7 @@ export const getUserById = async (id) => {
         return row[0];
 
     } catch (error) {
-        console.error('Error occured in getUserById', error.message);
+        console.error('Error occurred in getUserById', error.message);
         throw error;
     }
 };
@@ -33,7 +33,7 @@ export const getUserByEmail = async (userEmail) => {
         return rows[0];
 
     } catch (error) {
-        console.error('Error occured in getUserByEmail', error.message);
+        console.error('Error occurred in getUserByEmail', error.message);
         throw error;
     };
 };
@@ -52,7 +52,7 @@ export const createUser = async (newUser) => {
         return result.insertId;    // insertId gives us the auto-generated ID of the newly created user
 
     } catch (error) {
-        console.error(' Database error occured in createUser', error.message);
+        console.error(' Database error occurred in createUser', error.message);
         throw error;
     }
 };
@@ -64,10 +64,10 @@ export const updateUser = async (id, updatedUser) => {
         const [result] = await database.pool.query(
             ' UPDATE users SET name = ?, password = ?, email = ?, phone = ? WHERE id = ?', [name, hashedPassword, email, phone, id]
         );
-        return result.affectedRows;  // Returns number of rows updated (typically 1 if successfull)
+        return result.affectedRows;  // Returns number of rows updated (typically 1 if successful)
 
     } catch (error) {
-        console.error(' Database error occured in updateUser', error.message);
+        console.error(' Database error occurred in updateUser', error.message);
         throw error;
     }
 };
@@ -79,7 +79,7 @@ export const updateUserPassword = async (userId, newPassword) => {
         return result.affectedRows;
 
     } catch (error) {
-        console.error("Error occured while updating user password.");
+        console.error("Error occurred while updating user password.");
         throw error;
     }
 };
@@ -87,10 +87,10 @@ export const updateUserPassword = async (userId, newPassword) => {
 export const deleteUser = async (id) => {
     try {
         const [result] = await database.pool.query('DELETE FROM users WHERE id = ?', [id]);
-        return result.affectedRows;   // Returns number of rows deleted (typically 1 if successfull)
+        return result.affectedRows;   // Returns number of rows deleted (typically 1 if successful)
 
     } catch (error) {
-        console.error(' Database error occured in deleteUser', error.message);
+        console.error(' Database error occurred in deleteUser', error.message);
         throw error;
     }
 };
@@ -103,7 +103,7 @@ export const getAllUsersSafe = async () => {
         return rows;
 
     } catch (error) {
-        console.error('Error occured in getAllUsersSafe.', error.message);
+        console.error('Error occurred in getAllUsersSafe.', error.message);
         throw error;
     };
 };
@@ -116,7 +116,7 @@ export const getUserByIdSafe = async (id) => {
         return row[0];
 
     } catch (error) {
-        console.error('Error occured in getUsersByIdSafe.', error.message);
+        console.error('Error occurred in getUsersByIdSafe.', error.message);
         throw error;
 
     }

@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-const trasnpoter = nodemailer.createTransport(
+const transporter = nodemailer.createTransport(
     {
         service: 'gmail',
         auth: {
@@ -28,7 +28,7 @@ export const sendEmail = (to, subject, html) => {
         };
 
         // send the email
-        const info = trasnpoter.sendMail(mailOption);
+        const info = transporter.sendMail(mailOption);
 
         console.log('Email sent successfully', info.messageId);
 
@@ -41,7 +41,7 @@ export const sendEmail = (to, subject, html) => {
     }
 };
 
-export const sendCodeToEmail = async (recipientEmail, resetCode) => {
+export const sendResetCodeToEmail = async (recipientEmail, resetCode) => {
     // Specific - uses sendEmail() under the hood
 
     try {

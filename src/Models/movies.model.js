@@ -6,7 +6,7 @@ export const getAllMovies = async () => {
         return rows;
 
     } catch (error) {
-        console.error("Error occured in getAllMovies() model! :", error.message);
+        console.error("Error occurred in getAllMovies() model! :", error.message);
         throw error;
     };
 };
@@ -17,7 +17,7 @@ export const getMovieById = async (id) => {
         return row[0] || null;
 
     } catch (error) {
-        console.error("Error occured in getMovieById() model! :", error.message);
+        console.error("Error occurred in getMovieById() model! :", error.message);
         throw error;
     };
 };
@@ -33,7 +33,7 @@ export const createMovie = async (movieData) => {
         return result.insertId;
 
     } catch (error) {
-        console.error("Error occured in createMovie() model! :", error.message);
+        console.error("Error occurred in createMovie() model! :", error.message);
         throw error;
     };
 };
@@ -52,7 +52,7 @@ export const updateMovie = async (id, movieData) => {
         return result.affectedRows;
 
     } catch (error) {
-        console.error("Error occured in updateMovie() model! :", error.message);
+        console.error("Error occurred in updateMovie() model! :", error.message);
         throw error;
     };
 };
@@ -63,7 +63,7 @@ export const deleteMovie = async (id) => {
         return result.affectedRows;
 
     } catch (error) {
-        console.error("Error occured in deleteMovie() model! :", error.message);
+        console.error("Error occurred in deleteMovie() model! :", error.message);
         throw error;
     };
 };
@@ -76,7 +76,7 @@ export const searchMovieByTitle = async (searchTerm) => {
         return rows;
 
     } catch (error) {
-        console.error("Error occured in searchMovieByTitle() model! :", error.message);
+        console.error("Error occurred in searchMovieByTitle() model! :", error.message);
         throw error;
     };
 };
@@ -89,7 +89,7 @@ export const getMoviesByGenre = async (genre) => {
         return rows;
 
     } catch (error) {
-        console.error("Error occured in getMoviesByGenre() model! :", error.message);
+        console.error("Error occurred in getMoviesByGenre() model! :", error.message);
         throw error;
     };
 };

@@ -13,7 +13,7 @@ export const signUpController = async (req, res) => {
           prepare new user data
           create the user in the database
           generates the token
-          send a success return statement withour the password
+          send a success return statement without the password
 
         */
         const { name, email, password, phone } = req.body;

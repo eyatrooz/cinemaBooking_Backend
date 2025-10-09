@@ -27,7 +27,7 @@ export const requireAdmin = async (req, res, next) => {
             return res.status(403).json(
                 {
                     success: false,
-                    message: "Access denied, Admin privilgies."
+                    message: "Access denied, Admin privileges."
                 }
             );
         };
@@ -38,7 +38,7 @@ export const requireAdmin = async (req, res, next) => {
         return res.status(500).json(
             {
                 success: false,
-                message: "Internal server error occured at adminRequired."
+                message: "Internal server error occurred at adminRequired."
             }
         )
 

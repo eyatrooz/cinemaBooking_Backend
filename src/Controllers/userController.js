@@ -18,7 +18,7 @@ export const getAllUsersController = async (req, res) => {
         return res.status(200).json(
             {
                 success: true,
-                message: 'Fetching all users successed',
+                message: 'Fetching all users succeeded',
                 usersData: allUsers
             }
         );
@@ -27,7 +27,7 @@ export const getAllUsersController = async (req, res) => {
         return res.status(500).json(
             {
                 success: false,
-                message: 'Error occures while getting all users from database',
+                message: 'Error occurred while getting all users from database',
                 error: error.message
             }
         );
@@ -73,7 +73,7 @@ export const getUserByIDController = async (req, res) => {
         res.status(500).json(
             {
                 success: false,
-                message: 'Error occured while getting user by its id',
+                message: 'Error occurred while getting user by its id',
                 error: error.message
             }
         );
@@ -97,7 +97,7 @@ export const createUserController = async (req, res, next) => {
                 success: true,
                 message: ' A new user created successfully',
                 userData: {
-                    id: createNewUser,   // createNewUser = ID ( given automaticlly by the database)
+                    id: createNewUser,   // createNewUser = ID ( given automatically by the database)
                     name: newUser.name,
                     email: newUser.email,
                     phone: newUser.phone
@@ -119,7 +119,7 @@ export const createUserController = async (req, res, next) => {
         return res.status(500).json(
             {
                 success: false,
-                message: 'An internal server error occured while creating new user',
+                message: 'An internal server error occurred while creating new user',
                 error: error.message
             }
         );
@@ -180,14 +180,14 @@ export const updateUserController = async (req, res) => {
             return res.status(400).json(
                 {
                     success: false,
-                    message: 'Email address already exixts'
+                    message: 'Email address already exists'
                 }
             );
         }
         return res.status(500).json(
             {
                 success: false,
-                message: 'An internal server error occured while updating new user',
+                message: 'An internal server error occurred while updating new user',
                 error: error.message
             }
         );
@@ -229,7 +229,7 @@ export const deleteUserController = async (req, res) => {
         return res.status(500).json(
             {
                 success: false,
-                message: 'An internal server error occured while deleteing a user',
+                message: 'An internal server error occurred while deleting a user',
                 error: error.message
             }
         );

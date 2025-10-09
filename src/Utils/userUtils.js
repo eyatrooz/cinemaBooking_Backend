@@ -66,8 +66,8 @@ export const generateToken = (userID, userEmail) => {
         return token;
 
     } catch (error) {
-        console.error('Error occured while token generation.');
-        throw new Error('Token generatoin failed');
+        console.error('Error occurred while token generation.');
+        throw new Error('Token generation failed');
     };
 };
 

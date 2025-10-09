@@ -13,7 +13,7 @@ export const storeResetToken = async (userId, hashedToken) => {
         return result.insertId;
 
     } catch (error) {
-        console.error("Error occured while storing the reset token");
+        console.error("Error occurred while storing the reset token");
         throw error;
     }
 };
