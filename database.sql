@@ -14,7 +14,7 @@ CREATE TABLE users (
 CREATE TABLE movies (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(200) NOT NULL,
-    description TEXT,  -- this coulmn changed to main_cast
+    description TEXT,  -- this column changed to main_cast
     duration INT NOT NULL,
     genre VARCHAR(100),
     rating VARCHAR(10),

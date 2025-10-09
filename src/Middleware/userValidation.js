@@ -1,3 +1,4 @@
+
 export const validateId = (req, res, next) => {
     try {
         const { id } = req.params;
@@ -183,38 +184,36 @@ export const passwordValidation = (password) => {
 
 export const userCreationValidation = (req, res, next) => {
     try {
+
         const { name, email, password, phone } = req.body;
+        const allErrors = [];
 
-        const userName = validateUserName(name);
-        const userEmail = userEmailValidation(email);
-        const userPassword = passwordValidation(password);
+        const validation = [
+            validateUserName(name),
+            userEmailValidation(email),
+            passwordValidation(password)
+        ];
 
-        const Errors = [];
+        validation.forEach(result => {
+            if (!result.isValid) {
+                allErrors.push(...result.errors);
 
-        if (!userName.isValid) {
-            Errors.push(...userName.errors);
-        }
+            }
+        });
 
-        if (!userEmail.isValid) {
-            Errors.push(...userEmail.errors);
-        }
-
-        if (!userPassword.isValid) {
-            Errors.push(...userPassword.errors);
-        }
         if (phone) {
 
             if (typeof (phone) !== 'string' || phone.length > 13) {
-                Errors.push('Phone number must be vaid and cannot exeeds 13 digits');
+                allErrors.push('Phone number must be valid and cannot exceed 13 digits');
             }
         };
 
-        if (Errors.length > 0) {
+        if (allErrors.length > 0) {
             return res.status(400).json(
                 {
                     success: false,
                     message: 'Validation failed',
-                    error: Errors
+                    errors: allErrors
                 }
             )
         } else {
@@ -231,3 +230,4 @@ export const userCreationValidation = (req, res, next) => {
         );
     };
 };
+

@@ -15,7 +15,7 @@ export const validateResetToken = async (req, res, next) => {
             );
         };
 
-        const hashedToken = hashToken(token);  // hash it becuse the database stored the hashed one not the plain!
+        const hashedToken = hashToken(token);  // hash it because the database stored the hashed one not the plain!
 
         // token exists in the database? 
         const resetToken = await getResetToken(hashedToken);    // het the hashed token from the database

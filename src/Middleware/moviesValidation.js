@@ -39,7 +39,7 @@ export const validateMainCast = (cast) => {
 
     const trimmedCast = cast.trim();
     if (trimmedCast.length > 1000) {
-        errors.push("Main cast field must not exeeds 1000 characters");
+        errors.push("Main cast field must not exceeds 1000 characters");
     }
 
     // recommended by ClaudeAI to prevent tags
@@ -118,7 +118,7 @@ export const validateRating = (rating) => {
     const numRating = Number(rating);
 
     if (isNaN(numRating)) {
-        errors.push("Ratihng must be a number between 1-10");
+        errors.push("Rating must be a number between 1-10");
         return { isValid: false, errors };
     }
 
@@ -247,15 +247,12 @@ export const movieUpdateValidation = (req, res, next) => {
     try {
 
         //Object.keys() is a built-in JavaScript function that returns an array of property names (keys) from an object.
-
-        if (Object.keys(req.body).length === 0) {
-            return res.status(400).json(
-                {
-                    success: false,
-                    message: "No fields provided to update",
-                }
-            );
-        };
+        if (!req.body || Object.keys(req.body).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No fields provided to update",
+            });
+        }
 
         // Object.entries() is a built-in JavaScript function that converts an object into an array of [key, value] pairs.
         const fieldsToValidate = Object.entries(req.body);
@@ -280,6 +277,8 @@ export const movieUpdateValidation = (req, res, next) => {
                 }
             };
         });
+
+
 
         if (allErrors.length > 0) {
             return res.status(400).json(

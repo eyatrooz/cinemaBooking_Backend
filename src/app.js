@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import database from './Config/database.js';
 import userRoutes from './Routes/userRoutes.js';
 import authRoutes from './Routes/authRoutes.js';
+import moviesRoutes from './Routes/moviesRoutes.js';
 
 
 const app = express();
@@ -19,4 +20,5 @@ app.listen(PORT, () => {
 // Routes:
 app.use("/API/users", userRoutes);
 app.use("/API/auth", authRoutes);
+app.use("/API/movies", moviesRoutes);
 
