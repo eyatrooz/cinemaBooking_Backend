@@ -14,10 +14,10 @@ CREATE TABLE users (
 CREATE TABLE movies (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(200) NOT NULL,
-    description TEXT,  -- this column changed to main_cast
+    description TEXT,  -- this coulmn changed to main_cast
     duration INT NOT NULL,
     genre VARCHAR(100),
-    rating VARCHAR(10),
+    rating VARCHAR(10),  -- varachar changed to decimal(3, 1);
     poster_url VARCHAR(500),
     release_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -171,6 +171,10 @@ SELECT * FROM password_reset_tokens ORDER BY created_at DESC LIMIT 1;
 
 alter table movies change column description main_cast text ;
 describe movies; 
+
+-- change the rating from varchar to float
+ALTER TABLE movies 
+MODIFY COLUMN rating DECIMAl(3, 1);
 
 
 

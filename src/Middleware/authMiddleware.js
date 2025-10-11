@@ -1,16 +1,16 @@
 import JWT from 'jsonwebtoken';
 
-// function to check if the user logged in and has a valid token
-export const authenticateUser = (req, res, next) => {
+/*
+ authenticateUser: is a function that checks if someone is logged in before letting them access protected routes.
 
-    /*
-      Step 1: Extract token from Authorization header
-      Step 2: Check if Authorization header exists
-      Step 3: Check if token format is correct (starts with "Bearer ")
-      Step 4: Verify token using JWT and your secret
-      Step 5: Attach user information to request object
-      Step 6: Continue to next middleware/controller
-     */
+Protected Route" Means:
+User must be logged in (have a valid token)
+User's identity is verified (token is real, not expired)
+Sometimes, specific role required (like admin-only routes)
+
+*/
+
+export const authenticateUser = (req, res, next) => {
 
     try {
 
@@ -34,7 +34,8 @@ export const authenticateUser = (req, res, next) => {
         };
 
         // Extract the actual token part (remove "Bearer ")
-        const token = authHeader.split(' ')[1];
+        const token = authHeader.split(' ')[1];    // Splits the string wherever there's a space then Gets the element at index 1 (second item)
+
         const payLoad = JWT.verify(token, process.env.JWT_SECRET);
 
         req.user = {

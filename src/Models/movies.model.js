@@ -84,7 +84,7 @@ export const searchMovieByTitle = async (searchTerm) => {
 export const getMoviesByGenre = async (genre) => {
     try {
         const [rows] = await database.pool.query(
-            'SELECT * FROM movies WHERE genre = ? ORDER BY release_date DESC', [genre]
+            'SELECT * FROM movies WHERE genre LIKE ? ORDER BY release_date DESC', [`%${genre}%`]
         );
         return rows;
 
