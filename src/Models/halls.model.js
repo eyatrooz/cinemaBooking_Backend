@@ -20,7 +20,7 @@ export const createHall = async (hallData) => {
 
 export const getAllHalls = async () => {
     try {
-        const [rows] = await database.pool.query('SELECT * FROM halls WHERE ia_deleted = FALSE');
+        const [rows] = await database.pool.query('SELECT * FROM halls WHERE is_deleted = FALSE');
         return rows;
 
     } catch (error) {
@@ -33,7 +33,7 @@ export const getActiveHalls = async () => {
     try {
 
         const [rows] = await database.pool.query(
-            `SELECT * FROM halls WHERE hall_status = 'active' AND is_deleted = FALSE, ORDER BY name `
+            `SELECT * FROM halls WHERE hall_status = 'active' AND is_deleted = FALSE ORDER BY name `
         );
 
         return rows;
@@ -101,7 +101,7 @@ export const updateHall = async (id, hallData) => {
         const [result] = await database.pool.query(
             `
            UPDATE halls
-           SET name = ?, SET total_seats = ?, hall_type = ?, hall_status = ?
+           SET name = ?, total_seats = ?, hall_type = ?, hall_status = ?
            WHERE id = ? AND is_deleted = FALSE`,
             [name, totalSeats, hallType, hallStatus, id]
         );
@@ -136,7 +136,7 @@ export const permanentlyDeleteHall = async (id) => {
 
         // Before permanently deleting a hall, check if it has any screenings PAST or PRESENT
         const [screenings] = await database.pool.query(
-            ` SELECT COUNT(*) FROM screenings WHERE theater_id = ?`, [id]
+            ` SELECT COUNT(*) AS count FROM screenings WHERE theater_id = ?`, [id]
         );
 
         if (screenings[0].count > 0) {

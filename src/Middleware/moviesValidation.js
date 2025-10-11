@@ -297,7 +297,7 @@ export const movieUpdateValidation = (req, res, next) => {
         return res.status(500).json(
             {
                 success: false,
-                message: "Internal server error during movie update validation",
+                message: "Internal server error occurred in movie update validation",
                 error: error.message
             }
         );
