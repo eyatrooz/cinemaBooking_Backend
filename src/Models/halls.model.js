@@ -1,4 +1,4 @@
-import database from "../Config/database";
+import database from "../Config/database.js";
 
 export const createHall = async (hallData) => {
     try {
@@ -6,7 +6,7 @@ export const createHall = async (hallData) => {
         const { name, totalSeats, hallType, hallStatus } = hallData;
 
         const [result] = await database.pool.query(
-            'INSERT INTO halls (name, total_seats, hall_type, hall_status) VALUES(?, ?, ?, ?)',
+            'INSERT INTO halls (name, total_seats, hall_type, status) VALUES(?, ?, ?, ?)',
             [name, totalSeats, hallType, hallStatus]
         );
 
@@ -18,9 +18,17 @@ export const createHall = async (hallData) => {
     };
 };
 
-export const getAllHalls = async () => {
+export const getAllHalls = async (limit = null, offset = null) => {
     try {
-        const [rows] = await database.pool.query('SELECT * FROM halls WHERE is_deleted = FALSE');
+        let query = 'SELECT * FROM halls WHERE is_deleted = FALSE';
+        const params = [];
+
+        if (limit !== null && offset !== null) {
+            query += ' LIMIT ? OFFSET ?';
+            params.push(limit, offset);
+        }
+
+        const [rows] = await database.pool.query(query, params);
         return rows;
 
     } catch (error) {
@@ -29,13 +37,30 @@ export const getAllHalls = async () => {
     }
 };
 
-export const getActiveHalls = async () => {
+// ADDED - New count (number) function for getAllHalls 
+export const getTotalHallsCount = async () => {
     try {
+        const [result] = await database.pool.query('SELECT COUNT(*) AS total FROM halls WHERE is_deleted = FALSE');
+        return result[0].total;
 
-        const [rows] = await database.pool.query(
-            `SELECT * FROM halls WHERE hall_status = 'active' AND is_deleted = FALSE ORDER BY name `
-        );
+    } catch (error) {
+        console.error('Error occurred in getAllHalls model', error.message);
+        throw error;
+    }
+};
 
+
+export const getActiveHalls = async (limit = null, offset = null) => {
+    try {
+        let query = `SELECT * FROM halls WHERE status = 'active' AND is_deleted = FALSE ORDER BY name`;
+        const params = [];
+
+        if (limit !== null && offset !== null) {
+            query += ' LIMIT ? OFFSET ?';
+            params.push(limit, offset);
+        }
+
+        const [rows] = await database.pool.query(query, params);
         return rows;
 
     } catch (error) {
@@ -44,15 +69,49 @@ export const getActiveHalls = async () => {
     }
 };
 
-export const getHallsByType = async (hallType) => {
+// ADDED - New count function for getActiveHalls
+export const getActiveHallsCount = async () => {
     try {
-        const [rows] = await database.pool.query(
-            `SELECT * FROM halls WHERE hall_type = ?`, [hallType]
-        );
+        const [result] = await database.pool.query('SELECT COUNT(*) AS total FROM hall WHERE status = "active" AND is_deleted = false');
+        return result[0].total;
+
+    } catch (error) {
+        console.error('Error occurred in getActiveHallsCount model', error.message);
+        throw error;
+    }
+};
+
+// UPDATED - Added limit and offset parameters for pagination
+export const getHallsByType = async (hallType, limit = null, offset = null) => {
+    try {
+        let query = `SELECT * FROM halls WHERE hall_type = ?`;
+        const params = [hallType];
+
+        if (limit !== null && offset !== null) {
+            query += ' LIMIT ? OFFSET ?';
+            params.push(limit, offset);
+        }
+
+        const [rows] = await database.pool.query(query, params);
         return rows;
 
     } catch (error) {
         console.error('Error occurred in getHallsByType model', error.message);
+        throw error;
+    }
+};
+
+// ADDED - New count function for getHallsByType
+export const getHallsByTypeCount = async (hallType) => {
+    try {
+        const [result] = await database.pool.query(
+            `SELECT COUNT(*) as total FROM halls WHERE hall_type = ?`,
+            [hallType]
+        );
+        return result[0].total;
+
+    } catch (error) {
+        console.error('Error occurred in getHallsByTypeCount model', error.message);
         throw error;
     }
 };
@@ -68,13 +127,18 @@ export const getHallById = async (id) => {
     }
 };
 
-export const getHallsByStatus = async (status) => {
+// UPDATED - Added limit and offset parameters
+export const getHallsByStatus = async (status, limit = null, offset = null) => {
     try {
+        let query = `SELECT * FROM halls WHERE status = ? AND is_deleted = FALSE ORDER BY name`;
+        const params = [status];
 
-        const [rows] = await database.pool.query(
-            `SELECT * FROM halls WHERE hall_status = ? AND is_deleted = FALSE ORDER BY name `, [status]
-        );
+        if (limit !== null && offset !== null) {
+            query += ' LIMIT ? OFFSET ?';
+            params.push(limit, offset);
+        }
 
+        const [rows] = await database.pool.query(query, params);
         return rows;
 
     } catch (error) {
@@ -83,33 +147,17 @@ export const getHallsByStatus = async (status) => {
     }
 };
 
-
-export const getDeletedHalls = async () => {
+// ADDED - New count function for getHallsByStatus
+export const getHallsByStatusCount = async (status) => {
     try {
-
-        const [rows] = await database.pool.query(`SELECT * FROM halls WHERE is_deleted = TRUE ORDER BY name`);
-        return rows;
-
-    } catch (error) {
-        console.error('Error occurred in getDeletedHalls model', error.message);
-        throw error;
-    }
-};
-export const updateHall = async (id, hallData) => {
-    try {
-        const { name, totalSeats, hallType, hallStatus } = hallData;
         const [result] = await database.pool.query(
-            `
-           UPDATE halls
-           SET name = ?, total_seats = ?, hall_type = ?, hall_status = ?
-           WHERE id = ? AND is_deleted = FALSE`,
-            [name, totalSeats, hallType, hallStatus, id]
+            `SELECT COUNT(*) as total FROM halls WHERE status = ? AND is_deleted = FALSE`,
+            [status]
         );
-        return result.affectedRows;
-
+        return result[0].total;
 
     } catch (error) {
-        console.error('Error occurred in updateHall model', error.message);
+        console.error('Error occurred in getHallsByStatusCount model', error.message);
         throw error;
     }
 };
@@ -119,7 +167,7 @@ export const deleteHall = async (id) => {
     try {
         const [result] = await database.pool.query(
             `UPDATE halls 
-             SET hall_status = 'closed', is_deleted = TRUE 
+             SET status = 'closed', is_deleted = TRUE 
              WHERE id = ?`, [id]
         );
         return result.affectedRows;
@@ -136,7 +184,7 @@ export const permanentlyDeleteHall = async (id) => {
 
         // Before permanently deleting a hall, check if it has any screenings PAST or PRESENT
         const [screenings] = await database.pool.query(
-            ` SELECT COUNT(*) AS count FROM screenings WHERE theater_id = ?`, [id]
+            `SELECT COUNT(*) AS count FROM screenings WHERE theater_id = ?`, [id]
         );
 
         if (screenings[0].count > 0) {
@@ -155,30 +203,103 @@ export const permanentlyDeleteHall = async (id) => {
     }
 };
 
+// UPDATED - Added limit and offset parameters
+export const getDeletedHalls = async (limit = null, offset = null) => {
+    try {
+        let query = `SELECT * FROM halls WHERE is_deleted = TRUE ORDER BY name`;
+        const params = [];
+
+        if (limit !== null && offset !== null) {
+            query += ' LIMIT ? OFFSET ?';
+            params.push(limit, offset);
+        }
+
+        const [rows] = await database.pool.query(query, params);
+        return rows;
+
+    } catch (error) {
+        console.error('Error occurred in getDeletedHalls model', error.message);
+        throw error;
+    }
+};
+
+//ADDED - New count function for getDeletedHalls
+export const getDeletedHallsCount = async () => {
+    try {
+        const [result] = await database.pool.query(
+            `SELECT COUNT(*) as total FROM halls WHERE is_deleted = TRUE`
+        );
+        return result[0].total;
+
+    } catch (error) {
+        console.error('Error occurred in getDeletedHallsCount model', error.message);
+        throw error;
+    }
+};
+
+export const updateHall = async (id, hallData) => {
+    try {
+        const { name, totalSeats, hallType, hallStatus } = hallData;
+        const [result] = await database.pool.query(
+            `
+           UPDATE halls
+           SET name = ?, total_seats = ?, hall_type = ?, status = ?
+           WHERE id = ? AND is_deleted = FALSE`,
+            [name, totalSeats, hallType, hallStatus, id]
+        );
+        return result.affectedRows;
+
+
+    } catch (error) {
+        console.error('Error occurred in updateHall model', error.message);
+        throw error;
+    }
+};
+
 export const restoreHall = async (id) => {
     try {
 
         const [result] = await database.pool.query(
             `UPDATE halls 
-            SET hall_status = 'active', is_deleted = FALSE
+            SET status = 'active', is_deleted = FALSE
             WHERE id = ?`, [id]
         );
         return result.affectedRows;
 
 
     } catch (error) {
-        console.error('Error occurred in restoreHall  model', error.message);
+        console.error('Error occurred in restoreHall model', error.message);
         throw error;
     }
 };
 
-export const getAllHallsIncludeDeleted = async () => {
+export const getAllHallsIncludeDeleted = async (limit = null, offset = null) => {
     try {
-        const [rows] = await database.pool.query(`SELECT * FROM halls`);
+        let query = `SELECT * FROM halls`;
+        const params = [];
+
+        if (limit !== null && offset !== null) {
+            query += ' LIMIT ? OFFSET ?';
+            params.push(limit, offset);
+        }
+
+        const [rows] = await database.pool.query(query, params);
         return rows
 
     } catch (error) {
         console.error('Error occurred in getAllHallsIncludeDeleted model', error.message);
+        throw error;
+    }
+};
+
+// ADDED - New count function for getAllHallsIncludeDeleted
+export const getAllHallsIncludeDeletedCount = async () => {
+    try {
+        const [result] = await database.pool.query(`SELECT COUNT(*) as total FROM halls`);
+        return result[0].total;
+
+    } catch (error) {
+        console.error('Error occurred in getAllHallsIncludeDeletedCount model', error.message);
         throw error;
     }
 };

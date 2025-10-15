@@ -4,6 +4,7 @@ import database from './Config/database.js';
 import userRoutes from './Routes/userRoutes.js';
 import authRoutes from './Routes/authRoutes.js';
 import moviesRoutes from './Routes/moviesRoutes.js';
+import hallsRoutes from './Routes/hallsRoutes.js'
 
 
 const app = express();
@@ -21,4 +22,5 @@ app.listen(PORT, () => {
 app.use("/API/users", userRoutes);
 app.use("/API/auth", authRoutes);
 app.use("/API/movies", moviesRoutes);
+app.use("/API/halls", hallsRoutes)
 

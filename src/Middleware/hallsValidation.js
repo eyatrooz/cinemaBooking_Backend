@@ -1,3 +1,55 @@
+export const validateUrlId = (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // check if the id is provided
+        if (!id) {
+            return res.status(400).json(
+                {
+                    success: false,
+                    message: '  ID parameter is required in the URL',
+                }
+            );
+        };
+        // convert id to a number only so "123" will turn into 123
+        const numericID = Number(id);
+
+        // check if the id is a number and greater than zero
+        if (isNaN(numericID) || numericID <= 0) {
+            return res.status(400).json(
+                {
+                    success: false,
+                    message: ' id must be a number, and grater than 0',
+                }
+            );
+        };
+
+        // check if the id is an integer (no decimal)
+        if (!Number.isInteger(numericID)) {
+            return res.status(400).json(
+                {
+                    success: false,
+                    message: 'ID must be an integer number (no decimals)',
+                    received: id
+                }
+            )
+
+        }
+        req.validatedId = numericID;  //  Pass clean data to controller 
+
+        next();   // if all validation pass, continue to controller
+
+    } catch (error) {
+        return res.status(400).json(
+            {
+                success: false,
+                message: ' ID validation error',
+                error: error.message
+            }
+        );
+    }
+};
+
 export const validateHallName = (name) => {
     const errors = [];
 
