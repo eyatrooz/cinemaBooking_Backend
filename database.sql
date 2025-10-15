@@ -206,9 +206,34 @@ ON UPDATE CASCADE;
 
 DESCRIBE screenings;
 
+-- modiyfing the seats table
+alter table seats
+drop column seat_type;
 
+alter table seats
+CHANGE COLUMN theater_id hall_id INT NOT NULL;
 
+alter table seats
+add column is_active boolean default true after row_letter,
+add column updated_at timestamp default current_timestamp on update current_timestamp after created_at,
+add constraint uc_hall_seat unique(hall_id, row_letter, seat_number);
 
+describe seats;
+
+-- modifying bookings table--
+alter table bookings
+change column screenings_id screening_id int not null;
+
+ALTER TABLE bookings
+ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE AFTER total_amount;
+
+ALTER TABLE bookings
+ADD COLUMN payment_status ENUM('pending', 'completed', 'failed') DEFAULT 'pending' AFTER booking_status;
+
+ALTER TABLE bookings
+ADD COLUMN booking_code VARCHAR(20) UNIQUE AFTER payment_status;
+ 
+describe bookings;
 
 
 
