@@ -14,10 +14,10 @@ CREATE TABLE users (
 CREATE TABLE movies (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(200) NOT NULL,
-    description TEXT,  -- this coulmn changed to main_cast
+    description TEXT,  -- this column changed to main_cast
     duration INT NOT NULL,
     genre VARCHAR(100),
-    rating VARCHAR(10),  -- varachar changed to decimal(3, 1);
+    rating VARCHAR(10),  -- varchar changed to decimal(3, 1);
     poster_url VARCHAR(500),
     release_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -183,8 +183,28 @@ ADD COLUMN status ENUM('active', 'maintenance', 'closed') DEFAULT 'active' AFTER
 ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER created_at,
 ADD COLUMN is_deleted BOOLEAN DEFAULT FALSE,
 ADD COLUMN deleted_at TIMESTAMP NULL;
-
 describe halls;
+
+
+-- modifying screenings table--
+ALTER TABLE screenings 
+CHANGE COLUMN theater_id hall_id INT NOT NULL;
+
+ALTER TABLE screenings
+ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER created_at,
+ADD COLUMN screening_status ENUM('scheduled', 'ongoing', 'completed', 'cancelled') DEFAULT 'scheduled' AFTER price,
+ADD COLUMN available_seats INT NOT NULL AFTER price;
+
+ALTER TABLE screenings 
+DROP FOREIGN KEY fk_screenings_halls;
+
+ALTER TABLE screenings
+ADD CONSTRAINT fk_screenings_halls
+FOREIGN KEY (hall_id) REFERENCES halls(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+DESCRIBE screenings;
 
 
 

@@ -304,4 +304,15 @@ export const getAllHallsIncludeDeletedCount = async () => {
     }
 };
 
+export const getHallByName = async (name) => {
+    try {
+        const [row] = await database.pool.query('SELECT * FROM halls WHERE name = ? AND is_deleted = FALSE', [name]);
+        return row[0] || null;
+
+    } catch (error) {
+        console.error('Error occurred in getHallByName model', error.message);
+        throw error;
+    }
+};
+
 

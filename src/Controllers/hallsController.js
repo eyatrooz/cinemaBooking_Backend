@@ -1,3 +1,4 @@
+import database from "../Config/database.js";
 import {
     createHall,
     getAllHalls,
@@ -16,7 +17,8 @@ import {
     permanentlyDeleteHall,
     restoreHall,
     getAllHallsIncludeDeleted,
-    getAllHallsIncludeDeletedCount
+    getAllHallsIncludeDeletedCount,
+    getHallByName
 } from "../Models/halls.model.js";
 
 import { getPaginationParams, formatPaginatedResponse, calculateOffset } from "../Utils/paginationUtils.js";
@@ -60,8 +62,18 @@ export const createHallController = async (req, res) => {
 
         const { name, totalSeats, hallType, hallStatus } = req.body;
 
+        // check if the hall name is already exists
+        const fixedName = name.trim().toLowerCase();
+        const existingHallName = await getHallByName(fixedName);
+        if (existingHallName) {
+            return res.status(409).json({
+                success: false,
+                message: `Hall with name '${name}' already exists, please chose different name`
+            });
+        }
+
         const hallData = {
-            name: name.trim().toLowerCase(),
+            name: fixedName,
             totalSeats: parseInt(totalSeats),
             hallType: hallType ? hallType.trim().toLowerCase() : "standard",
             hallStatus: hallStatus ? hallStatus.trim().toLowerCase() : "active",
@@ -85,7 +97,7 @@ export const createHallController = async (req, res) => {
         if (error.code === 'ER_DUP_ENTRY') {
             return res.status(409).json({
                 success: false,
-                message: "Hall with this name already exists"
+                message: "Hall with this name already exists, please chose different name"
             });
         };
 

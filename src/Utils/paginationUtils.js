@@ -30,7 +30,7 @@ export const calculateTotalPage = (totalItems, limit) => {
 };
 
 export const formatPaginatedResponse = (data, page, limit, totalItems) => {
-    const totalPages = calculateTotalPage(totalItems / limit);
+    const totalPages = calculateTotalPage(totalItems, limit);
 
     return {
         success: true,
